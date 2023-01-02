@@ -1,0 +1,46 @@
+#!/bin/bash
+
+CHEAT_URL="cheat.sh"
+TMPFILE="$HOME/.cheat.cache"
+
+
+update_cache() {
+  echo "Generating cache file..."
+  MKTMPFILE=$(mktemp)
+  curl  $CHEAT_URL/:list 2>/dev/null | egrep -v "(rosetta|:learn|:list)" > $MKTMPFILE
+
+  (for i in $(curl  $CHEAT_URL/:list 2>/dev/null | grep  "/:list" | sed 's#/:list##g') ; do
+    curl $CHEAT_URL/$i/:list 2>/dev/null | egrep -v '(:list|:learn|rosetta)' | sed "s/^/$i\//g"
+  done;) >> $MKTMPFILE
+
+  (for i in $(curl  $CHEAT_URL/:list 2>/dev/null | grep  "/rosetta");do
+    curl $CHEAT_URL/$i/:list 2>/dev/null | egrep -v '(:list|:learn|rosetta)' | sed "s#^#$i#g"
+  done;) >> $MKTMPFILE
+
+  cat $MKTMPFILE | sort -u > $TMPFILE && rm $MKTMPFILE
+  exit
+}
+
+search() {
+  if [ -z "$1" ];then
+    if [ ! -f $TMPFILE ];then
+      update_cache
+    fi
+    cat $TMPFILE |  fzf --no-mouse -e --ansi   --color "hl:-1:underline,hl+:-1:underline:reverse" --bind shift-left:preview-page-up,shift-right:preview-page-down --preview 'curl -s cheat.sh/{1}' --preview-window=right:70%:wrap
+  else
+    curl -s cheat.sh/$1 | less -R
+  fi
+}
+
+show_usage() {
+  echo "-h|--help: display this help"
+  echo "-c|--update-cache: update cache file containing cheat list available"
+  echo "TBD"
+}
+# main
+
+case "$1" in
+  -h|--help) show_usage;;
+  -c|--update-cache) update_cache;;
+  *) search $1;;
+esac

@@ -1,0 +1,66 @@
+[global]
+target = "~/.local/bin/"
+upgrade_only = true
+
+["junegunn/fzf"]
+
+["https://github.com/junegunn/fzf"]
+download_source=true
+file = "*/shell/key-bindings.zsh"
+target = "~/.zshrc.d/"
+
+["ogham/exa"]
+asset_filters = ['^musl']
+
+["BurntSushi/ripgrep"]
+
+["jgm/pandoc"]
+
+["zyedidia/eget"]
+
+["gohugoio/hugo"]
+asset_filters = ["extended",'^.deb']
+
+["nojima/httpie-go"]
+
+["ajeetdsouza/zoxide"]
+
+["stedolan/jq"]
+
+["sharkdp/bat"]
+asset_filters = ['^musl']
+
+["wfxr/forgit"]
+file="bin/git-forgit"
+target = "~/.zshrc.d/bin/"
+
+["https://github.com/wfxr/forgit"]
+download_source=true
+file = "forgit.plugin.zsh"
+target = "~/.zshrc.d/"
+
+["zsh-users/zsh-autosuggestions"]
+download_source=true
+file = "zsh-autosuggestions.zsh"
+target = "~/.zshrc.d/zsh-autosuggestions.zsh"
+
+["ohmyzsh/ohmyzsh"]
+download_source=true
+file = "*/lib/completion.zsh"
+target = "~/.zshrc.d/completion.zsh"
+
+
+["junegunn/vim-plug"]
+download_source=true
+file = "*/plug.vim"
+target = "~/.local/share/nvim/site/autoload/plug.vim"
+
+["https://dl.k8s.io/release/v1.26.0/bin/linux/amd64/kubectl"]
+download_only=true
+
+["tomnomnom/gron"]
+
+["FiloSottile/age"]
+
+["https://mirror.openshift.com/pub/openshift-v4/clients/ocp/latest/openshift-client-linux.tar.gz"]
+file = "oc"

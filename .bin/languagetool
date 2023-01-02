@@ -1,0 +1,11 @@
+#!/bin/bash
+
+
+if [ ! -d "/home/jhanos/.languagetool/" ];then
+  curl -L -o $HOME/LanguageTool-stable.zip https://languagetool.org/download/LanguageTool-stable.zip
+  unzip $HOME/LanguageTool-stable.zip
+  rm $HOME/LanguageTool-stable.zip
+  mv  $HOME/LanguageTool*  $HOME/.languagetool
+fi
+
+awk -v i=0 '{if($0 ~ /^---/ || $0 ~ /```/){i++;print ""}else{;if(i%2==0){print $0}else{print ""}}}' $2 | java -jar /home/jhanos/.languagetool/languagetool-commandline.jar $1 -

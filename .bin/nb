@@ -1,0 +1,22 @@
+#!/bin/bash
+cd ~/.nb
+pgrep -f http.server > /dev/null 2>&1
+if [ $? -ne 0 ];then
+  python3 -m http.server > /dev/null 2>&1 &
+  PID=$!
+fi
+IFS=: read -ra selected < <(
+RG_PREFIX="rg --column --line-number --no-heading --color=always --smart-case "
+$RG_PREFIX |
+        fzf --ansi \
+        --disabled \
+        --color "hl:-1:underline,hl+:-1:underline:reverse" \
+        --delimiter : \
+      	--bind shift-left:preview-page-up,shift-right:preview-page-down \
+        --bind "change:reload:$RG_PREFIX {q}"  \
+        --preview 'bat {1} -p -P --color=always -H {2}' \
+        --preview-window=right:70%:wrap:+{2}-5
+)
+[ -n "${selected[0]}" ] && vim "${selected[0]}"
+kill $PID >/dev/null 2>&1
+cd -

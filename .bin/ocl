@@ -1,0 +1,51 @@
+#!/usr/bin/zsh
+
+proxy=0
+curl -m 2 -k https://admin.caas-qlf.svc.meshcore.net  > /dev/null 2>&1
+if [ $? -ne 0 ];then
+  proxy=1
+  alias oc='https_proxy=http://gateway-fr.priv.atos.fr:3128 oc'
+fi
+
+
+clusters="OCP3 QLF | https://admin.caas-qlf.svc.meshcore.net
+OCP3 STG | https://admin.caas-stg.svc.meshcore.net
+OCP3 PROD PMP | https://admin.prd.co.svc.meshcore.net
+OCP3 PROD LP | https://admin.prd-lp.co.svc.meshcore.net
+OCP3 PCI STG | https://admin.stg-vdm.caaspci.svc.meshcore.net
+OCP3 PCI PRD SCL Unreachable | https://admin.prd-scl.caaspci.svc.meshcore.net
+OCP3 PCI PRD VDM Unreachable | https://admin.prd-vdm.caaspci.svc.meshcore.net
+OCP4 DEV | https://api.dev.caas4noprd.svc.meshcore.net
+OCP4 STG | https://api.stg.caas4noprd.svc.meshcore.net
+OCP4 PRD PMP | https://api.pmp.caas4prd.svc.meshcore.net
+OCP4 PRD SCL | https://api.scl.caas4prd.svc.meshcore.net
+OCP4 PRD VDM | https://api.vdm.caas4prd.svc.meshcore.net
+OCP3 TPD PMP | https://admin.caas-pmp.tpd.svc.meshcore.net
+OCP3 TPD VDM | https://admin.caas-vdm.tpd.svc.meshcore.net
+OCP4 PRD eHealth | https://api.prd.ehealth.svc.meshcore.net
+OCP4 ps internal tbop4ad001s | https://api.sbx.caas4noprd.svc.meshcore.net"
+
+if [ ! -f "/tmp/ochash" ];then
+  echo -n "Password:"
+  read -s pass
+  oc login https://admin.caas-qlf.svc.meshcore.net --insecure-skip-tls-verify=true -u a177164 -p "$pass"  > /dev/null 2>&1
+  if [ $? -eq 0 ];then
+    oc logout
+    encode=$(echo $pass | tr "A-z" "D-zA-C" | base64)
+    echo $encode > /tmp/ochash
+  else
+    echo "Error with password"
+    exit 1
+  fi
+else
+  pass=$(cat /tmp/ochash | base64 -d | tr "D-zA-C" "A-z") 
+fi
+
+ocp=$(echo -e "$clusters" | fzf | awk '{print $NF}' )
+if [ -n "$ocp" ];then
+  oc login $ocp  --insecure-skip-tls-verify=true -u a177164 -p $pass
+fi
+
+if [ $proxy -ne 0 ];then
+  echo "alias oc='https_proxy=http://gateway-fr.priv.atos.fr:3128 oc'"
+fi
