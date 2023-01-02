@@ -7,7 +7,11 @@
 # git clone https://git/notes.git $HOME/.nb
 # git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME checkout
 # git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ~/.powerlevel10k
-#
+
+
+# ssh agent fowarding
+[[ -e /tmp/ssh-agent ]] || [[ -f "/tmp/ssh-*/*" ]] && ln -f -s /tmp/ssh-*/* /tmp/sshAgent > /dev/null 2>&1
+
 # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
 # Initialization code that may require console input (password prompts, [y/n]
 # confirmations, etc.) must go above this block; everything else may go below.
@@ -41,8 +45,7 @@ source ~/.powerlevel10k/powerlevel10k.zsh-theme
 source <(kubectl completion zsh)
 source <(zoxide init zsh)
 
-# ssh agent fowarding
-[[ -e /tmp/ssh-agent ]] || ln -f -s /tmp/ssh-*/* /tmp/sshAgent 2>/dev/null
+
 export SSH_AUTH_SOCK=/tmp/sshAgent
 
 # alias
