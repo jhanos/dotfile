@@ -1,0 +1,10 @@
+#!/bin/bash
+if [ $1 != "-text" ];then
+  echo 'watermark -text "blablabla" image.jpg'
+else
+
+  width=$(identify -format %w $3)
+  size=$(echo $width / 15 | bc)
+  output=$(echo $3 | sed 's/\./w\./g')
+  convert $3 -pointsize $size -draw "gravity center rotate 30 fill gray text 1,11 '$2' " $output
+fi

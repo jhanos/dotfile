@@ -1,0 +1,39 @@
+#!/bin/bash
+cache_file="$HOME/.yc.tmp"
+set -o pipefail
+
+# pipe-viewer -sc tabletennisdaily, select the channel and :i=1
+declare -A dict
+dict['ping']='UC_6FUryP3X_kJDm7eGWQN_g UC_1fAvMwuupRyQE5Fd2lZ2w UCqHc12tVGhzBtlMUq7MR7wA UCRnDl9NtKQDZVLn06Bwskrg UC9ckyA_A3MfXUa0ttxMoIZw UC_368FANcHhkhZ7oVqkW86A UCxccMOwsnVQEqmOU94MZi7g UC3_PnwGGlbEZjkD4YRDFn1g' # ,,,,,ittf,tabletennisdaily, adam bobrow , monqui pong
+dict['jdr']='UCbM4Z7OzdBTip4fvMHvwG6A UCeMT9tun1lMbHOF7jsFNnZQ UCu47iib9xKIqcIaA_5ViWOw UC3nksGRcsiBJfjmx9ImBC1A UCsYsBPwucinBZUBUAbAyURg'
+dict['info']='UCAcAnMF0OrCtUep3Y4M-ZPw UCUo1RqYV8tGjV38sQ8S5p9A UCynFUJ4zUVuh3GX7bABTjGQ UCQgWpmt02UtJkyO32HGUASQ'
+
+generate_cache()
+{
+filename=$(mktemp)
+tmpfilename=$(mktemp)
+for key in "${!dict[@]}"; do
+  for channel_id in ${dict[$key]}
+  do
+    pipe-viewer --no-use-colors --no-interactive --custom-layout="*AGE_SHORT* || $key *AUTHOR* || *TITLE* || *TIME* || *ID*" -uv=$channel_id | sed -e 's/1w/7d/g' -e 's/2w/14d/g' -e 's/3w/21d/g' -e 's/4w/28d/g' -e 's/1m/30d/g' -e 's/2m/60d/g' -e 's/3m/90d/g' -e 's/4m/120d/g' -e 's/5m/150d/g' -e 's/6m/180d/g'  -e 's/7m/210d/g' -e 's/8m/240d/g' -e 's/9m/270d/g' -e 's/10m/300d/g' -e 's/11m/330d/g' -e 's/12m/360d/g' -e 's/1y/365d/g' -e '1d' > $tmpfilename
+    if [ $? -eq 0 ];then
+      cat $tmpfilename >> $filename
+    else
+      echo "0d || $channel_id failed" >> $filename
+    fi
+  done
+done
+date > $cache_file
+cat $filename | sort -n  >> $cache_file
+rm -f $filename
+cat $cache_file
+}
+
+if [ "$1" == "-c" ];then
+  generate_cache
+else
+  if [ ! -f "$cache_file" ] ;then
+    generate_cache
+  fi
+  cat $cache_file | fzf -e --no-sort --delimiter='\|\|' --bind "ctrl-r:reload(yc -c),enter:execute(pipe-viewer --no-video-info -4 -f --no-interactive -id {-1}),ctrl-y:execute[youtube-viewer -sc {2} ]" --header-lines=1 --info=hidden
+fi
