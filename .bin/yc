@@ -4,15 +4,15 @@ set -o pipefail
 
 # pipe-viewer -sc tabletennisdaily, select the channel and :i=1
 declare -A dict
-dict['ping']='UC_6FUryP3X_kJDm7eGWQN_g UC_1fAvMwuupRyQE5Fd2lZ2w UCqHc12tVGhzBtlMUq7MR7wA UCRnDl9NtKQDZVLn06Bwskrg UC9ckyA_A3MfXUa0ttxMoIZw UC_368FANcHhkhZ7oVqkW86A UCxccMOwsnVQEqmOU94MZi7g UC3_PnwGGlbEZjkD4YRDFn1g' # ,,,,,ittf,tabletennisdaily, adam bobrow , monqui pong
+dict['ping']='UC_1fAvMwuupRyQE5Fd2lZ2w UCqHc12tVGhzBtlMUq7MR7wA UCRnDl9NtKQDZVLn06Bwskrg UC9ckyA_A3MfXUa0ttxMoIZw UC_368FANcHhkhZ7oVqkW86A UCxccMOwsnVQEqmOU94MZi7g UC3_PnwGGlbEZjkD4YRDFn1g' # ,,,,,ittf,tabletennisdaily, adam bobrow , monqui pong
 dict['jdr']='UCbM4Z7OzdBTip4fvMHvwG6A UCeMT9tun1lMbHOF7jsFNnZQ UCu47iib9xKIqcIaA_5ViWOw UC3nksGRcsiBJfjmx9ImBC1A UCsYsBPwucinBZUBUAbAyURg'
 dict['info']='UCAcAnMF0OrCtUep3Y4M-ZPw UCUo1RqYV8tGjV38sQ8S5p9A UCynFUJ4zUVuh3GX7bABTjGQ UCQgWpmt02UtJkyO32HGUASQ'
 
 request_channel() {
 	pipe-viewer --no-use-colors --no-interactive --custom-layout="*AGE_SHORT* || *AUTHOR* || *TITLE* || *TIME* || *URL* || *CHANNELID* || *ID*" -uv=$1 -us=$1 >$2
-	if [ $? -eq 0 ]; then
-		cat $2 >>$3
-	fi
+	#if [ $? -eq 0 ]; then
+	cat $2 >>$3
+	#fi
 
 }
 
@@ -59,5 +59,5 @@ else
 	if [ ! -f "$cache_file" ]; then
 		generate_cache
 	fi
-	cat $cache_file | fzf -e --no-sort --delimiter='\|\|' --prompt "$(date --date="@$(stat -c %Z $HOME/.yc.tmp)") >" --bind "ctrl-r:reload(yc -c),enter:execute(pipe-viewer --no-video-info -4 -f --no-interactive -id {-1}),ctrl-y:execute[youtube-viewer -f --author={-2} {3} ]" --info=hidden --listen 6266
+	cat $cache_file | fzf -e --no-sort --delimiter='\|\|' --prompt "$(date --date="@$(stat -c %Z $HOME/.yc.tmp)") >" --bind "ctrl-r:reload(yc -c),enter:execute(pipe-viewer --no-video-info -3 -f --no-interactive -id {-1}),ctrl-y:execute[youtube-viewer -f --author={-2} {3} ]" --info=hidden --listen 6266
 fi
