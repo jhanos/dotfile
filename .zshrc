@@ -4,7 +4,6 @@
 # curl -OL https://github.com/zyedidia/eget/releases/download/v1.3.1/eget-1.3.1-linux_amd64.tar.gz && tar -xzf eget-1.3.1-linux_amd64.tar.gz
 # ./eget-1.3.1-linux_amd64/eget -D
 # git clone --bare https://git/dotfiles.git $HOME/.dotfiles/
-# git clone https://git/notes.git $HOME/.nb
 # git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME checkout
 # git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ~/.powerlevel10k
 
@@ -57,7 +56,8 @@ alias k='kubectl'
 alias urlencode='python3 -c "import sys, urllib.parse; print(urllib.parse.quote(sys.argv[1]))"'
 alias urldecode='python3 -c "import sys, urllib.parse; print(urllib.parse.unquote_plus(sys.argv[1]))"'
 alias cat='bat -P --style=plain'
-
+alias icat='kitten icat'
+alias ani='ani-cli -q 480p'
 
 
 function m {
