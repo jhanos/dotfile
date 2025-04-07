@@ -438,4 +438,4 @@ bindsym $mod+Shift+a exec /usr/bin/keepass --auto-type
 
 # icon -> install nvidia
 # lifera ->  echo options nvidia_drm modeset=1 | sudo tee /etc/modprobe.d/nvidia_drm.conf
-# pacman -S kitty keepass obsidian nextcloud steam discord firefox thunderbird newsflash rofi thunar
+# pacman -S kitty keepass obsidian nextcloud steam discord firefox thunderbird newsflash rofi thunar fzf
